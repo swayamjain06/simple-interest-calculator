@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simple Interest Calculator</title>
+  <style>
+    body { background: #f1f5f9; color: #172033; font: 1rem/1.5 system-ui, sans-serif; margin: 1rem; }
+    main { max-width: 30rem; margin: 4vh auto; padding: clamp(1rem, 5vw, 2rem); background: white; border-radius: 1rem; }
+    label { display: block; margin-top: 1rem; font-weight: 600; }
+    input { box-sizing: border-box; display: block; width: 100%; padding: .6rem; border: 1px solid #64748b; border-radius: .4rem; font: inherit; }
+    button { margin-top: 1.25rem; padding: .65rem 1rem; border: 0; border-radius: .4rem; background: #1d4ed8; color: white; font: inherit; cursor: pointer; }
+    output:not(:empty) { display: block; margin-top: 1rem; padding: .75rem; background: #eff6ff; white-space: pre-line; overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Simple Interest Calculator</h1>
+    <form id="calculator">
+      <label for="principal">Principal</label>
+      <input id="principal" type="number" min="0" step="any" required>
+      <label for="rate">Annual interest rate (%)</label>
+      <input id="rate" type="number" min="0" step="any" required>
+      <label for="years">Time (years)</label>
+      <input id="years" type="number" min="0" step="any" required>
+      <button type="submit">Calculate</button>
+      <output id="result" for="principal rate years" role="status"></output>
+    </form>
+  </main>
+  <script>
+    const form = document.querySelector('#calculator');
+    const principalInput = document.querySelector('#principal');
+    const rateInput = document.querySelector('#rate');
+    const yearsInput = document.querySelector('#years');
+    const result = document.querySelector('#result');
+    const format = new Intl.NumberFormat(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
+    form.addEventListener('input', () => {
+      result.textContent = '';
+    });
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const principal = principalInput.valueAsNumber;
+      const rate = rateInput.valueAsNumber / 100;
+      const years = yearsInput.valueAsNumber;
+      const interest = [principal, rate, years].includes(0) ? 0 : principal * rate * years;
+      const total = principal + interest;
+      if (!Number.isFinite(total)) {
+        result.textContent = 'The result is too large. Enter smaller values.';
+        return;
+      }
+      result.textContent = 'Simple interest: ' + format.format(interest) +
+        '\nTotal amount: ' + format.format(total);
+    });
+  </script>
+</body>
+</html>
